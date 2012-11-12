@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,7 +35,10 @@ public abstract class BrowsingActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mExtensionsWhiteList = new ArrayList<String>();
+		mExtensionsBlackList = new ArrayList<String>();
 		mComparator = new ComparatorFilesAlpha();
+		mListAdapter = new FileListAdapter(this, new LinkedList<File>(), null);
 	}
 
 	/**
@@ -43,6 +50,9 @@ public abstract class BrowsingActivity extends Activity implements
 		// Setup the widget
 		mFilesList = (ListView) findViewById(android.R.id.list);
 		mFilesList.setOnItemClickListener(this);
+
+		// set adpater
+		mFilesList.setAdapter(mListAdapter);
 
 		// initial folder
 		File folder;
@@ -129,10 +139,16 @@ public abstract class BrowsingActivity extends Activity implements
 		listFiles(file);
 
 		// create string list adapter
-		mListAdapter = new FileListAdapter(this, mList, file);
-
-		// set adpater
-		mFilesList.setAdapter(mListAdapter);
+		// mListAdapter = new FileListAdapter(this, mList, file);
+		mListAdapter.clear();
+		mListAdapter.setCurrentFolder(file);
+		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+			mListAdapter.addAll(mList);
+		} else {
+			for (File f : mList) {
+				mListAdapter.add(f);
+			}
+		}
 
 		// update path
 		mCurrentFolder = file;
@@ -164,7 +180,7 @@ public abstract class BrowsingActivity extends Activity implements
 			file = mList.get(i);
 
 			// remove
-			if (!isFileVisible(file) && isFileTypeAllowed(file)) {
+			if (!(isFileVisible(file) && isFileTypeAllowed(file))) {
 				mList.remove(i);
 			}
 		}
@@ -212,11 +228,13 @@ public abstract class BrowsingActivity extends Activity implements
 		if (file.isFile()) {
 			ext = FileUtils.getFileExtension(file);
 			if ((mExtensionsWhiteList != null)
+					&& (mExtensionsWhiteList.size() > 0)
 					&& (!mExtensionsWhiteList.contains(ext))) {
 				allow = false;
 			}
 
 			if ((mExtensionsBlackList != null)
+					&& (mExtensionsBlackList.size() > 0)
 					&& (mExtensionsBlackList.contains(ext))) {
 				allow = false;
 			}
@@ -241,6 +259,6 @@ public abstract class BrowsingActivity extends Activity implements
 	protected boolean mShowFoldersOnly = false;
 	protected boolean mShowHiddenFiles = true;
 	protected boolean mHideNonWriteableFiles = false;
-	protected ArrayList<String> mExtensionsWhiteList = null;
-	protected ArrayList<String> mExtensionsBlackList = null;
+	protected List<String> mExtensionsWhiteList;
+	protected List<String> mExtensionsBlackList;
 }

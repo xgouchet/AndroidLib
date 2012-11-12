@@ -285,6 +285,14 @@ public class FileListAdapter extends ArrayAdapter<File> {
 	}
 
 	/**
+	 * @param folder
+	 *            the current parent folder for displayed files
+	 */
+	public void setCurrentFolder(File folder) {
+		mFolder = folder;
+	}
+
+	/**
 	 * @param iconOnTop
 	 *            let the icon be above the file name
 	 */

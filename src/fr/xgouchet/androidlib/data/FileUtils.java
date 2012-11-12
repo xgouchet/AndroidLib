@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -22,6 +24,50 @@ public class FileUtils {
 	/** default android Download folder */
 	public static final String DOWNLOAD_FOLDER = (STORAGE.getAbsolutePath()
 			+ File.separator + "Download").toLowerCase();
+
+	/**
+	 * Copy all files in the given asset folder to the destination folder (must
+	 * be in the app's sandbox, unless the app has the write to external storage
+	 * permission)
+	 * 
+	 * @param ctx
+	 *            the current application context
+	 * @param destFolder
+	 *            the destination folder
+	 * @param assetFolder
+	 *            the source folder path (from the asset folder)
+	 */
+	public static void copyAssetsToAppData(Context ctx, File destFolder,
+			String assetFolder) {
+
+		String files[] = null;
+		InputStream assetStream;
+		File file;
+		String assetFile;
+
+		AssetManager assets = ctx.getAssets();
+
+		try {
+			files = assets.list(assetFolder);
+		} catch (IOException e) {
+			Log.w("AndroidLib", "Asset folder not found");
+		}
+
+		if (files != null) {
+			for (String fileName : files) {
+				file = new File(destFolder, fileName);
+
+				assetFile = assetFolder + File.separatorChar + fileName;
+				try {
+					file.getParentFile().mkdirs();
+					assetStream = assets.open(assetFile);
+					FileUtils.copyFile(assetStream, file);
+				} catch (IOException e) {
+					Log.w("AndroidLib", "unable to copy file " + fileName);
+				}
+			}
+		}
+	}
 
 	/**
 	 * 
@@ -111,7 +157,7 @@ public class FileUtils {
 			name = file.getName();
 			index = name.lastIndexOf(".");
 			if (index != -1) {
-				ext = name.substring(index + 1);
+				ext = name.substring(index + 1).toLowerCase();
 			}
 		}
 		return ext;

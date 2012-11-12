@@ -27,6 +27,15 @@
         android:text="@string/ui_mail" />
 
     <Button
+        android:id="@+id/buttonRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dialog_buttons_margin"
+        android:drawableLeft="@drawable/app_rating"
+        android:text="@string/ui_app_rating" />
+
+    <Button
         android:id="@+id/buttonMarket"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -19,7 +19,9 @@
     <string name="ui_mail">android@xgouchet.fr</string>
     <string name="ui_choose_mail">Open mail using ... </string>
     <string name="ui_market_url">"https://market.android.com/developer?pub=Xavier+Gouchet"</string>
+    <string name="ui_market_app_url">"https://play.google.com/store/apps/details?id=%s"</string>
     <string name="ui_market">"Take a look at my other apps"</string>
+    <string name="ui_app_rating">"Rate this app \n Leave a feedback"</string>
     <string name="ui_feedback">"Please feel free to contact me for any feedback, feature request or bug report. "</string>
     <string name="ui_licence_content">"This software is provided 'as-is', without any express or implied warranty.	In no event will the author be held liable for any damages arising from the use of this software."</string>
     <string name="ui_art_licence_title">Artistic Licence</string>

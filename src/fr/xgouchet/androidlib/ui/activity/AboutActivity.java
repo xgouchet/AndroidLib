@@ -21,12 +21,14 @@ public class AboutActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.buttonMail).setOnClickListener(this);
 		findViewById(R.id.buttonMarket).setOnClickListener(this);
+		findViewById(R.id.buttonRate).setOnClickListener(this);
 	}
 
 	/**
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	public void onClick(View view) {
+
 		if (view.getId() == R.id.buttonMail) {
 			CharSequence appName;
 			appName = getPackageManager().getApplicationLabel(
@@ -34,6 +36,10 @@ public class AboutActivity extends Activity implements OnClickListener {
 			MiscUtils.sendEmail(this, appName);
 		} else if (view.getId() == R.id.buttonMarket) {
 			MiscUtils.openMarket(this);
+		} else if (view.getId() == R.id.buttonRate) {
+			CharSequence appPackage;
+			appPackage = getApplicationInfo().packageName;
+			MiscUtils.openMarketApp(this, appPackage);
 		}
 	}
 }

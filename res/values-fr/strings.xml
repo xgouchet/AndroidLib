@@ -17,9 +17,11 @@
     <string name="ui_contact_title">Contact</string>
     <string name="ui_licence_title">License</string>
     <string name="ui_mail">android@xgouchet.fr</string>
-    <string name="ui_choose_mail">Envoyer un mail avec ... </string>
-    <string name="ui_market_url">"https://market.android.com/developer?pub=Xavier+Gouchet"</string>
+    <string name="ui_choose_mail">Envoyer un mail avec &#8230; </string>
+    <string name="ui_market_url">"https://market.android.com/developer?pub=Xavier+Gouchet&amp;hl=fr"</string>
+    <string name="ui_market_app_url">"https://play.google.com/store/apps/details?id=%s&amp;hl=fr"</string>
     <string name="ui_market">"Découvrir mes autres applications"</string>
+    <string name="ui_app_rating">"Noter cette application \n Laisser un commentaire"</string>
     <string name="ui_feedback">"N'hésitez pas à me contacter pour des remarques, bug ou tout autre commentaire."</string>
     <string name="ui_licence_content">"Ce logiciel est distribué 'tel-quel', sans aucune garantie implicite ou explicite. En aucun cas l'auteur ne pourrait être tenu responsable pour quelque dégat découlant de l'utilisation de ce logiciel."</string>
     <string name="ui_art_licence_title">Licence Artistique</string>

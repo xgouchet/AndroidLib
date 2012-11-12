@@ -1,12 +1,13 @@
 package fr.xgouchet.androidlib.common;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
+import de.neofonie.mobile.app.android.widget.crouton.Crouton;
+import de.neofonie.mobile.app.android.widget.crouton.Style;
 import fr.xgouchet.androidlib.R;
-import fr.xgouchet.androidlib.ui.Toaster;
 
 /**
  * 
@@ -34,20 +35,40 @@ public class MiscUtils {
 	/**
 	 * Open the market on my apps
 	 * 
-	 * @param ctx
-	 *            the current context
+	 * @param activity
+	 *            the calling activity
 	 */
-	public static void openMarket(Context ctx) {
+	public static void openMarket(Activity activity) {
 		String url;
 		Intent market = new Intent(Intent.ACTION_VIEW);
 		// market.setData(Uri.parse("market://search?q=pub:Xavier Gouchet"));
-		url = ctx.getResources().getString(R.string.ui_market_url);
+		url = activity.getResources().getString(R.string.ui_market_url);
 		market.setData(Uri.parse(url));
 		try {
-			ctx.startActivity(market);
+			activity.startActivity(market);
 		} catch (ActivityNotFoundException e) {
-			Log.w("AndroidLib", "Market Activity", e);
-			Toaster.showToast(ctx, R.string.toast_no_market, true);
+			Crouton.showText(activity, R.string.toast_no_market, Style.ALERT);
+		}
+	}
+
+	/**
+	 * Open the market on this app
+	 * 
+	 * @param activity
+	 *            the calling activity
+	 * @param appPackage
+	 *            the application package name
+	 */
+	public static void openMarketApp(Activity activity, CharSequence appPackage) {
+		String url;
+		Intent market = new Intent(Intent.ACTION_VIEW);
+		url = activity.getResources().getString(R.string.ui_market_app_url,
+				appPackage);
+		market.setData(Uri.parse(url));
+		try {
+			activity.startActivity(market);
+		} catch (ActivityNotFoundException e) {
+			Crouton.showText(activity, R.string.toast_no_market, Style.ALERT);
 		}
 	}
 }

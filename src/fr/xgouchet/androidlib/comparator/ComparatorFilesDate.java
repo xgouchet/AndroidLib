@@ -1,5 +1,6 @@
 package fr.xgouchet.androidlib.comparator;
 
+import android.annotation.SuppressLint;
 import java.io.File;
 import java.util.Comparator;
 
@@ -9,6 +10,7 @@ import java.util.Comparator;
  * @author x.gouchet
  * 
  */
+@SuppressLint("DefaultLocale")
 public class ComparatorFilesDate implements Comparator<File> {
 	/**
 	 * @see Comparator#compare(Object, Object)

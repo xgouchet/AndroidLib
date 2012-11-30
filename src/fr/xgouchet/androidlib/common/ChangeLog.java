@@ -1,15 +1,48 @@
 package fr.xgouchet.androidlib.common;
 
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
+import fr.xgouchet.androidlib.R;
 
 /**
  *  
  */
 public abstract class ChangeLog {
+
+	public boolean displayChangeLog(Context context, SharedPreferences prefs) {
+
+		boolean firstLaunch = false;
+
+		if (isFirstLaunch(context, prefs)) {
+			firstLaunch = true;
+
+			Builder builder = new Builder(context);
+
+			String message = context.getString(getTitleResource(context))
+					+ "\n\n" + context.getString(getChangeLogResource(context));
+			builder.setTitle(R.string.ui_whats_new);
+			builder.setMessage(message);
+			builder.setCancelable(true);
+			builder.setPositiveButton(android.R.string.ok,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+
+			builder.create().show();
+
+		}
+
+		saveCurrentVersion(context, prefs);
+
+		return firstLaunch;
+	}
 
 	/**
 	 * @param version

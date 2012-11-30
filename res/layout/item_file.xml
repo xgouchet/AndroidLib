@@ -5,7 +5,7 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="@dimen/list_item_pading" >
-
+
     <TextView
         android:id="@+id/textFileName"
         android:layout_width="match_parent"
@@ -16,7 +16,6 @@
         android:text=""
         android:textStyle="bold"
         android:typeface="sans" >
-
     </TextView>
 
 </LinearLayout>

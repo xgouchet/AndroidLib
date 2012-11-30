@@ -385,6 +385,7 @@ public class MimeTypeMapEnhanced {
 			MAP.put("pko", "application/vnd.ms-pki.pko");
 			MAP.put("pl", "text/plain");
 			MAP.put("pl", "text/x-script.perl");
+			MAP.put("plist", "text/xml");
 			MAP.put("plx", "application/x-pixclscript");
 			MAP.put("pm", "image/x-xpixmap");
 			MAP.put("pm", "text/x-script.perl-module");

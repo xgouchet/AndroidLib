@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+@SuppressLint("DefaultLocale")
 public class FileUtils {
 	/** File of the external storage data */
 	public static final File STORAGE = Environment
@@ -23,7 +25,7 @@ public class FileUtils {
 
 	/** default android Download folder */
 	public static final String DOWNLOAD_FOLDER = (STORAGE.getAbsolutePath()
-			+ File.separator + "Download").toLowerCase();
+			+ File.separator + "Download");
 
 	/**
 	 * Copy all files in the given asset folder to the destination folder (must
@@ -158,6 +160,27 @@ public class FileUtils {
 			index = name.lastIndexOf(".");
 			if (index != -1) {
 				ext = name.substring(index + 1).toLowerCase();
+			}
+		}
+		return ext;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 *            the file
+	 * @return the file extension (folders return an empty extension, whatever
+	 *         the name)
+	 */
+	public static String getFileExtension(String filename) {
+		String ext;
+		int index;
+
+		ext = "";
+		if (filename != null) {
+			index = filename.lastIndexOf(".");
+			if (index != -1) {
+				ext = filename.substring(index + 1).toLowerCase();
 			}
 		}
 		return ext;

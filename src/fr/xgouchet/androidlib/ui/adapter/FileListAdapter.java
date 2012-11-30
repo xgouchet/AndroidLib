@@ -179,7 +179,7 @@ public class FileListAdapter extends ArrayAdapter<File> {
 
 		if (file.getPath().equals(STORAGE_PATH)) { // External storage
 			id = R.drawable.sd_card;
-		} else if (file.getPath().toLowerCase().equals(DOWNLOAD_FOLDER)) {
+		} else if (file.getPath().equalsIgnoreCase(DOWNLOAD_FOLDER)) {
 			id = R.drawable.folder_downloads;
 		} else if (file.isDirectory()) {
 			id = R.drawable.folder;

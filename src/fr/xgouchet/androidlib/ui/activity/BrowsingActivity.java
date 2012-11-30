@@ -8,7 +8,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -115,6 +117,7 @@ public abstract class BrowsingActivity extends Activity implements
 	 * @param file
 	 *            the file of the folder to display
 	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	protected void fillFolderView(File file) {
 		file = new File(FileUtils.getCanonizePath(file));
 
@@ -149,6 +152,7 @@ public abstract class BrowsingActivity extends Activity implements
 				mListAdapter.add(f);
 			}
 		}
+		mFilesList.scrollTo(0, 0);
 
 		// update path
 		mCurrentFolder = file;

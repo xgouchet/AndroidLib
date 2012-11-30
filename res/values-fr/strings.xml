@@ -3,15 +3,11 @@
 
     <!-- FR -->
 
-
     <!--  -->
     <string name="ui_ok">OK</string>
     <string name="ui_yes">Oui</string>
     <string name="ui_no">Non</string>
     <string name="ui_cancel">Annuler</string>
-
-    <!--  -->
-    <string name="ui_trash_folder">Corbeille</string>
 
     <!--  -->
     <string name="ui_contact_title">Contact</string>

@@ -11,13 +11,10 @@
     <string name="ui_cancel">Cancel</string>
 
     <!--  -->
-    <string name="ui_trash_folder">Recycle Bin</string>
-
-    <!--  -->
     <string name="ui_contact_title">Contact</string>
     <string name="ui_licence_title">Licence</string>
     <string name="ui_mail">android@xgouchet.fr</string>
-    <string name="ui_choose_mail">Open mail using ... </string>
+    <string name="ui_choose_mail">Open mail using &#8230; </string>
     <string name="ui_market_url">"https://market.android.com/developer?pub=Xavier+Gouchet"</string>
     <string name="ui_market_app_url">"https://play.google.com/store/apps/details?id=%s"</string>
     <string name="ui_market">"Take a look at my other apps"</string>

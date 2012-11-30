@@ -1,5 +1,6 @@
 package fr.xgouchet.androidlib.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,7 @@ import fr.xgouchet.androidlib.common.MiscUtils;
  * best way is to include the about_generic layout in the layout of children
  * activity
  */
+@SuppressLint("Registered")
 public class AboutActivity extends Activity implements OnClickListener {
 
 	/**

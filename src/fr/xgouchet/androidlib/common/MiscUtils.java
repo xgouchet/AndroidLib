@@ -12,7 +12,7 @@ import fr.xgouchet.androidlib.R;
 /**
  * 
  */
-public class MiscUtils {
+public final class MiscUtils {
 
 	/**
 	 * Start an email composer to send an email
@@ -22,8 +22,9 @@ public class MiscUtils {
 	 * @param object
 	 *            the title of the mail to compose
 	 */
-	public static void sendEmail(Context ctx, CharSequence object) {
-		Intent email = new Intent(Intent.ACTION_SEND);
+	public static void sendEmail(final Context ctx, final CharSequence object) {
+		Intent email;
+		email = new Intent(Intent.ACTION_SEND);
 		email.setType("text/plain");
 		email.putExtra(Intent.EXTRA_EMAIL, new String[] { ctx.getResources()
 				.getString(R.string.ui_mail) });
@@ -38,11 +39,11 @@ public class MiscUtils {
 	 * @param activity
 	 *            the calling activity
 	 */
-	public static void openMarket(Activity activity) {
+	public static void openMarket(final Activity activity) {
 		String url;
-		Intent market = new Intent(Intent.ACTION_VIEW);
-		// market.setData(Uri.parse("market://search?q=pub:Xavier Gouchet"));
-		url = activity.getResources().getString(R.string.ui_market_url);
+		Intent market;
+		market = new Intent(Intent.ACTION_VIEW);
+		url = activity.getString(R.string.ui_market_url);
 		market.setData(Uri.parse(url));
 		try {
 			activity.startActivity(market);
@@ -59,16 +60,35 @@ public class MiscUtils {
 	 * @param appPackage
 	 *            the application package name
 	 */
-	public static void openMarketApp(Activity activity, CharSequence appPackage) {
+	public static void openMarketApp(final Activity activity,
+			final CharSequence appPackage) {
 		String url;
-		Intent market = new Intent(Intent.ACTION_VIEW);
-		url = activity.getResources().getString(R.string.ui_market_app_url,
-				appPackage);
+		Intent market;
+		market = new Intent(Intent.ACTION_VIEW);
+		url = activity.getString(R.string.ui_market_app_url, appPackage);
 		market.setData(Uri.parse(url));
 		try {
 			activity.startActivity(market);
 		} catch (ActivityNotFoundException e) {
 			Crouton.showText(activity, R.string.toast_no_market, Style.ALERT);
 		}
+	}
+
+	/**
+	 * Open the market on my apps
+	 * 
+	 * @param activity
+	 *            the calling activity
+	 */
+	public static void openDonate(final Activity activity) {
+		String url;
+		Intent donate;
+		donate = new Intent(Intent.ACTION_VIEW);
+		url = activity.getString(R.string.ui_donate_url);
+		donate.setData(Uri.parse(url));
+		activity.startActivity(donate);
+	}
+
+	private MiscUtils() {
 	}
 }

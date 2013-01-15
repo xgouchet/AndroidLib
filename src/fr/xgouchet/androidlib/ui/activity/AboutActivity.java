@@ -2,6 +2,8 @@ package fr.xgouchet.androidlib.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.view.View.OnClickListener;
 import fr.xgouchet.androidlib.R;
@@ -24,12 +26,13 @@ public class AboutActivity extends Activity implements OnClickListener {
 		findViewById(R.id.buttonMail).setOnClickListener(this);
 		findViewById(R.id.buttonMarket).setOnClickListener(this);
 		findViewById(R.id.buttonRate).setOnClickListener(this);
+		findViewById(R.id.buttonDonate).setOnClickListener(this);
 	}
 
 	/**
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
-	public void onClick(View view) {
+	public void onClick(final View view) {
 
 		if (view.getId() == R.id.buttonMail) {
 			CharSequence appName;
@@ -42,6 +45,12 @@ public class AboutActivity extends Activity implements OnClickListener {
 			CharSequence appPackage;
 			appPackage = getApplicationInfo().packageName;
 			MiscUtils.openMarketApp(this, appPackage);
+		} else if (view.getId() == R.id.buttonDonate) {
+			MiscUtils.openDonate(this);
 		}
+	}
+
+	public void onDonate() {
+
 	}
 }

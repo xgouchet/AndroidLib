@@ -7,5 +7,5 @@ import android.graphics.drawable.Drawable;
 
 public interface ThumbnailProvider {
 
-	public Drawable getThumbnailForFile(Context context, File file);
+	Drawable getThumbnailForFile(Context context, File file);
 }

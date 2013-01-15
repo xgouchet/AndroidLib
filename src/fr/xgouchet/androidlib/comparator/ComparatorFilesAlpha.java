@@ -16,7 +16,7 @@ public class ComparatorFilesAlpha implements Comparator<File> {
 	/**
 	 * @see Comparator#compare(Object, Object)
 	 */
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		int result;
 
 		// sort folders first

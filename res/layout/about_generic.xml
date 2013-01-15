@@ -9,6 +9,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:text="@string/ui_donate_title" />
+
+    <TextView
+        style="@style/TextContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/ui_donate_content" />
+
+    <Button
+        android:id="@+id/buttonDonate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dialog_buttons_margin"
+        android:drawableLeft="@drawable/donate"
+        android:text="@string/ui_donate_title" />
+
+    <TextView
+        style="@style/TextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="@string/ui_contact_title" />
 
     <TextView

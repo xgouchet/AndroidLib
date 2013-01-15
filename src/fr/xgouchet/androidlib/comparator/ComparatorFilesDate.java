@@ -1,8 +1,8 @@
 package fr.xgouchet.androidlib.comparator;
 
-import android.annotation.SuppressLint;
 import java.io.File;
 import java.util.Comparator;
+import java.util.Locale;
 
 /**
  * Compare files by date (w/ folders listed first)
@@ -10,13 +10,13 @@ import java.util.Comparator;
  * @author x.gouchet
  * 
  */
-@SuppressLint("DefaultLocale")
 public class ComparatorFilesDate implements Comparator<File> {
 	/**
 	 * @see Comparator#compare(Object, Object)
 	 */
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		int result;
+		Locale locale;
 
 		// sort folders first
 		if ((file1.isDirectory()) && (!file2.isDirectory())) {
@@ -27,13 +27,14 @@ public class ComparatorFilesDate implements Comparator<File> {
 
 			// both are files, or both are folders...
 			// get modif date
-			long modif1 = file1.lastModified();
-			long modif2 = file2.lastModified();
+			final long modif1 = file1.lastModified();
+			final long modif2 = file2.lastModified();
 
 			// same extension, we sort alphabetically
 			if (modif1 == modif2) {
-				result = file1.getName().toLowerCase()
-						.compareTo(file2.getName().toLowerCase());
+				locale = Locale.getDefault();
+				result = file1.getName().toLowerCase(locale)
+						.compareTo(file2.getName().toLowerCase(locale));
 			} else {
 				result = (int) (modif1 - modif2);
 			}

@@ -3,6 +3,7 @@
 
     <!-- FR -->
 
+
     <!--  -->
     <string name="ui_ok">OK</string>
     <string name="ui_yes">Oui</string>
@@ -10,12 +11,14 @@
     <string name="ui_cancel">Annuler</string>
 
     <!--  -->
+    <string name="ui_donate_title">Faire un don</string>
     <string name="ui_contact_title">Contact</string>
     <string name="ui_licence_title">License</string>
     <string name="ui_mail">android@xgouchet.fr</string>
     <string name="ui_choose_mail">Envoyer un mail avec &#8230; </string>
     <string name="ui_market_url">"https://market.android.com/developer?pub=Xavier+Gouchet&amp;hl=fr"</string>
     <string name="ui_market_app_url">"https://play.google.com/store/apps/details?id=%s&amp;hl=fr"</string>
+    <string name="ui_donate_url">"http://xgouchet.fr/donate_fr.php"</string>
     <string name="ui_market">"Découvrir mes autres applications"</string>
     <string name="ui_app_rating">"Noter cette application \n Laisser un commentaire"</string>
     <string name="ui_feedback">"N'hésitez pas à me contacter pour des remarques, bug ou tout autre commentaire."</string>
@@ -23,6 +26,8 @@
     <string name="ui_art_licence_title">Licence Artistique</string>
     <string name="ui_history">Historique</string>
     <string name="ui_art_licence_content">"Toutes les icônes de cette application ont été créées et appartiennent à l'auteur de l'application : Xavier Gouchet (android@xgouchet.fr)."</string>
+    <string name="ui_donate_content">"Cette application est intégralement gratuite, et sans aucune publicité. "</string>
     <string name="ui_whats_new">"Quoi d'neuf"</string>
+    <string name="ui_additional_licences">Licences supplémentaires</string>
 
 </resources>

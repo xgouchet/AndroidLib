@@ -128,8 +128,6 @@ public final class TextFileUtils {
 	}
 
 	/**
-	 * TODO detect encoding
-	 * 
 	 * @param file
 	 *            the file to read
 	 * @return the content of the file as text

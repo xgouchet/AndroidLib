@@ -7,7 +7,7 @@
     android:padding="@dimen/list_item_pading" >
 
     <TextView
-        android:id="@+id/textFileName"
+        android:id="@id/textFileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/file"

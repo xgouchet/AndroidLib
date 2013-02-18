@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- UI -->
+    <item name="buttonDonate" type="id"/>
+    <item name="buttonMail" type="id"/>
+    <item name="buttonRate" type="id"/>
+    <item name="buttonMarket" type="id"/>
+    <item name="textFileName" type="id"/>
+</resources>

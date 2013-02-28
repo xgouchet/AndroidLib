@@ -18,7 +18,6 @@
 package de.neofonie.mobile.app.android.widget.crouton;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,7 +32,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /*
  * Based on an article by Cyril Mottier (http://android.cyrilmottier.com/?p=773) <br>
@@ -292,6 +290,7 @@ public final class Crouton {
 		return croutonView;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initializeCroutonView() {
 		Resources resources = this.activity.getResources();
 

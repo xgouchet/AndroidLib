@@ -34,7 +34,7 @@ public class Style {
 
 	public static final int holoRedLight = 0xffff4444;
 	public static final int holoGreenLight = 0xff99cc00;
-	public static final int holoBlueLight = 0xffff8000;
+	public static final int holoBlueLight = 0xffff9900;
 
 	static {
 		ALERT = new Builder().setDuration(3500)

@@ -7,7 +7,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @Deprecated
-public class Toaster {
+public final class Toaster {
 
 	/**
 	 * Show a toast message to the user, ensuring the toast is called from the
@@ -62,14 +62,14 @@ public class Toaster {
 	 *            is the message an error (changes the text to red)
 	 */
 	@Deprecated
-	public static void showToast(Context ctx, int resId, boolean error) {
+	public static void showToast(final Context ctx, final int resId, final boolean error) {
 		Toast toast;
-		TextView v;
+		TextView view;
 
 		toast = Toast.makeText(ctx, resId, Toast.LENGTH_SHORT);
 		if (error) {
-			v = (TextView) toast.getView().findViewById(android.R.id.message);
-			v.setTextColor(mError);
+			view = (TextView) toast.getView().findViewById(android.R.id.message);
+			view.setTextColor(ERROR_COLOR);
 			toast.setDuration(Toast.LENGTH_LONG);
 		}
 		toast.show();
@@ -86,19 +86,22 @@ public class Toaster {
 	 *            is the message an error (changes the text to red)
 	 */
 	@Deprecated
-	public static void showToast(Context ctx, CharSequence message,
-			boolean error) {
+	public static void showToast(final Context ctx, final CharSequence message,
+			final boolean error) {
 		Toast toast;
-		TextView v;
+		TextView view;
 
 		toast = Toast.makeText(ctx, message, Toast.LENGTH_SHORT);
 		if (error) {
-			v = (TextView) toast.getView().findViewById(android.R.id.message);
-			v.setTextColor(mError);
+			view = (TextView) toast.getView().findViewById(android.R.id.message);
+			view.setTextColor(ERROR_COLOR);
 			toast.setDuration(Toast.LENGTH_LONG);
 		}
 		toast.show();
 	}
 
-	protected static final int mError = Color.rgb(255, 128, 64);
+	private Toaster() {
+	}
+
+	private static final int ERROR_COLOR = Color.rgb(255, 128, 64);
 }

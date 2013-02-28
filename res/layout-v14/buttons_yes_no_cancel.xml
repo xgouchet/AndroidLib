@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
-
+
     <Button
         android:id="@+id/buttonYes"
         android:layout_width="match_parent"
@@ -27,14 +27,13 @@
         <View
             android:layout_width="@dimen/dialog_buttons_margin"
             android:layout_height="match_parent" />
-
+
         <Button
             android:id="@+id/buttonNo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/ui_no" />
-
     </LinearLayout>
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package fr.xgouchet.androidlib.comparator;
 
+import android.annotation.SuppressLint;
 import java.io.File;
 import java.util.Comparator;
 
@@ -9,11 +10,12 @@ import java.util.Comparator;
  * @author x.gouchet
  * 
  */
+@SuppressLint("DefaultLocale")
 public class ComparatorFilesSize implements Comparator<File> {
 	/**
 	 * @see Comparator#compare(Object, Object)
 	 */
-	public int compare(File file1, File file2) {
+	public int compare(final File file1, final File file2) {
 		int result;
 
 		// sort folders first
@@ -28,8 +30,8 @@ public class ComparatorFilesSize implements Comparator<File> {
 		} else {
 
 			// both are files, we get the sizes
-			long size1 = file1.length();
-			long size2 = file2.length();
+			final long size1 = file1.length();
+			final long size2 = file2.length();
 
 			// same extension, we sort alphabetically
 			if (size1 == size2) {

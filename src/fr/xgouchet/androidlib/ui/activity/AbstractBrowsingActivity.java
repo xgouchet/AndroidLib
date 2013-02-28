@@ -8,7 +8,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -26,17 +28,17 @@ import fr.xgouchet.androidlib.ui.adapter.FileListAdapter;
 /**
  * 
  */
-public abstract class BrowsingActivity extends Activity implements
+public abstract class AbstractBrowsingActivity extends Activity implements
 		OnItemClickListener {
 
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onCreate(final Bundle savedState) {
+		super.onCreate(savedState);
 
-		mExtensionsWhiteList = new ArrayList<String>();
-		mExtensionsBlackList = new ArrayList<String>();
+		mExtWhiteList = new ArrayList<String>();
+		mExtBlackList = new ArrayList<String>();
 		mComparator = new ComparatorFilesAlpha();
 		mListAdapter = new FileListAdapter(this, new LinkedList<File>(), null);
 	}
@@ -72,8 +74,8 @@ public abstract class BrowsingActivity extends Activity implements
 	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView,
 	 *      android.view.View, int, long)
 	 */
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(final AdapterView<?> parent, final View view,
+			final int position, final long itemId) {
 		File file, canon;
 
 		file = mList.get(position);
@@ -115,46 +117,42 @@ public abstract class BrowsingActivity extends Activity implements
 	 * @param file
 	 *            the file of the folder to display
 	 */
-	protected void fillFolderView(File file) {
-		file = new File(FileUtils.getCanonizePath(file));
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	protected void fillFolderView(final File folder) {
+		final File file = new File(FileUtils.getCanonizePath(folder));
 
 		if (!file.exists()) {
 			Crouton.makeText(this, R.string.toast_folder_doesnt_exist,
 					Style.ALERT).show();
-			return;
-		}
-
-		if (!file.isDirectory()) {
+		} else if (!file.isDirectory()) {
 			Crouton.makeText(this, R.string.toast_folder_not_folder,
 					Style.ALERT).show();
-			return;
-		}
-
-		if (!file.canRead()) {
+		} else if (!file.canRead()) {
 			Crouton.makeText(this, R.string.toast_folder_cant_read, Style.ALERT)
 					.show();
-			return;
-		}
-
-		listFiles(file);
-
-		// create string list adapter
-		// mListAdapter = new FileListAdapter(this, mList, file);
-		mListAdapter.clear();
-		mListAdapter.setCurrentFolder(file);
-		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
-			mListAdapter.addAll(mList);
 		} else {
-			for (File f : mList) {
-				mListAdapter.add(f);
+
+			listFiles(file);
+
+			// create string list adapter
+			// mListAdapter = new FileListAdapter(this, mList, file);
+			mListAdapter.clear();
+			mListAdapter.setCurrentFolder(file);
+			if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
+				mListAdapter.addAll(mList);
+			} else {
+				for (File f : mList) {
+					mListAdapter.add(f);
+				}
 			}
+			mFilesList.scrollTo(0, 0);
+
+			// update path
+			mCurrentFolder = file;
+			setTitle(file.getName());
+
+			onFolderViewFilled();
 		}
-
-		// update path
-		mCurrentFolder = file;
-		setTitle(file.getName());
-
-		onFolderViewFilled();
 	}
 
 	/**
@@ -164,7 +162,7 @@ public abstract class BrowsingActivity extends Activity implements
 	 * @param folder
 	 *            the folder to analyze
 	 */
-	protected void listFiles(File folder) {
+	protected void listFiles(final File folder) {
 		File file;
 
 		// get files list as array list
@@ -196,7 +194,7 @@ public abstract class BrowsingActivity extends Activity implements
 		}
 	}
 
-	protected boolean isFileVisible(File file) {
+	protected boolean isFileVisible(final File file) {
 
 		boolean visible = true;
 
@@ -221,21 +219,19 @@ public abstract class BrowsingActivity extends Activity implements
 	 * @return if the file can be shown (either appear in white list or doesn't
 	 *         appear on blacklist)
 	 */
-	protected boolean isFileTypeAllowed(File file) {
+	protected boolean isFileTypeAllowed(final File file) {
 		boolean allow = true;
 		String ext;
 
 		if (file.isFile()) {
 			ext = FileUtils.getFileExtension(file);
-			if ((mExtensionsWhiteList != null)
-					&& (mExtensionsWhiteList.size() > 0)
-					&& (!mExtensionsWhiteList.contains(ext))) {
+			if ((mExtWhiteList != null) && (!mExtWhiteList.isEmpty())
+					&& (!mExtWhiteList.contains(ext))) {
 				allow = false;
 			}
 
-			if ((mExtensionsBlackList != null)
-					&& (mExtensionsBlackList.size() > 0)
-					&& (mExtensionsBlackList.contains(ext))) {
+			if ((mExtBlackList != null) && (!mExtBlackList.isEmpty())
+					&& (mExtBlackList.contains(ext))) {
 				allow = false;
 			}
 		}
@@ -244,7 +240,7 @@ public abstract class BrowsingActivity extends Activity implements
 	}
 
 	/** The list of files to display */
-	protected ArrayList<File> mList;
+	protected List<File> mList;
 	/** the dialog's list view */
 	protected ListView mFilesList;
 	/** The list adapter */
@@ -258,7 +254,7 @@ public abstract class BrowsingActivity extends Activity implements
 
 	protected boolean mShowFoldersOnly = false;
 	protected boolean mShowHiddenFiles = true;
-	protected boolean mHideNonWriteableFiles = false;
-	protected List<String> mExtensionsWhiteList;
-	protected List<String> mExtensionsBlackList;
+	protected boolean mHideLockedFiles = false;
+	protected List<String> mExtWhiteList;
+	protected List<String> mExtBlackList;
 }

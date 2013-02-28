@@ -7,6 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -14,7 +18,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-public class FileUtils {
+public final class FileUtils {
+
 	/** File of the external storage data */
 	public static final File STORAGE = Environment
 			.getExternalStorageDirectory();
@@ -23,7 +28,46 @@ public class FileUtils {
 
 	/** default android Download folder */
 	public static final String DOWNLOAD_FOLDER = (STORAGE.getAbsolutePath()
-			+ File.separator + "Download").toLowerCase();
+			+ File.separator + "Download");
+
+	public static String getFileHash(final File file) {
+
+		MessageDigest md;
+		FileInputStream input;
+		byte[] buffer = new byte[1024];
+		int length;
+
+		StringBuffer sb = new StringBuffer("");
+
+		try {
+			md = MessageDigest.getInstance("MD5");
+			input = new FileInputStream(file);
+			do {
+				length = input.read(buffer, 0, 1024);
+				if (length > 0) {
+					md.update(buffer, 0, length);
+				}
+			} while (length > 0);
+
+			input.close();
+
+			// convert the byte to hex format
+			byte[] mdbytes = md.digest();
+			for (int i = 0; i < mdbytes.length; i++) {
+				sb.append(Integer.toHexString((mdbytes[i] & 0xff)));
+			}
+		} catch (NoSuchAlgorithmException e) {
+			Log.w("FileUtils", "MD5 algorithm not available");
+		} catch (FileNotFoundException e) {
+			Log.w("FileUtils", "Input file not found, can't compute checksum");
+		} catch (IOException e) {
+			Log.w("FileUtils", "IO error, can't compute checksum");
+		}
+
+		System.out.println("Digest(in hex format):: " + sb.toString());
+
+		return sb.toString();
+	}
 
 	/**
 	 * Copy all files in the given asset folder to the destination folder (must
@@ -37,25 +81,25 @@ public class FileUtils {
 	 * @param assetFolder
 	 *            the source folder path (from the asset folder)
 	 */
-	public static void copyAssetsToAppData(Context ctx, File destFolder,
-			String assetFolder) {
+	public static void copyAssetsToAppData(final Context ctx,
+			final File destFolder, final String assetFolder) {
 
 		String files[] = null;
 		InputStream assetStream;
 		File file;
 		String assetFile;
 
-		AssetManager assets = ctx.getAssets();
+		final AssetManager assets = ctx.getAssets();
 
 		try {
 			files = assets.list(assetFolder);
 		} catch (IOException e) {
-			Log.w("AndroidLib", "Asset folder not found");
+			Log.w(FileUtils.class.getName(), "Asset folder not found");
 		}
 
 		if (files != null) {
 			for (String fileName : files) {
-				file = new File(destFolder, fileName);
+				file = new File(destFolder, fileName); // NOPMD
 
 				assetFile = assetFolder + File.separatorChar + fileName;
 				try {
@@ -63,7 +107,8 @@ public class FileUtils {
 					assetStream = assets.open(assetFile);
 					FileUtils.copyFile(assetStream, file);
 				} catch (IOException e) {
-					Log.w("AndroidLib", "unable to copy file " + fileName);
+					Log.w(FileUtils.class.getName(), "unable to copy file "
+							+ fileName);
 				}
 			}
 		}
@@ -75,12 +120,13 @@ public class FileUtils {
 	 *            the file to test
 	 * @return if a file is a symbolic link
 	 */
-	public static boolean isSymLink(File file) {
+	public static boolean isSymLink(final File file) {
 		boolean result;
 		result = false;
 
 		if ((file != null) && file.exists()) {
-			File canon, canonParent;
+			File canon = null, canonParent;
+
 			if (file.getParent() == null) {
 				canon = file;
 			} else {
@@ -88,14 +134,14 @@ public class FileUtils {
 					canonParent = file.getParentFile().getCanonicalFile();
 					canon = new File(canonParent, file.getName());
 				} catch (IOException e) {
-					canon = null;
+					Log.v(FileUtils.class.getName(), "No canonical file");
 				}
 			}
 
 			try {
 				if (canon != null) {
-					result = !canon.getCanonicalFile().equals(
-							canon.getAbsoluteFile());
+					result = canon.getCanonicalFile().equals(
+							canon.getAbsoluteFile()) ^ true;
 				}
 			} catch (IOException e) {
 				result = false;
@@ -111,13 +157,13 @@ public class FileUtils {
 	 *            the symbolic link file
 	 * @return the target of the link
 	 */
-	public static File getSymLinkTarget(File file) {
+	public static File getSymLinkTarget(final File file) {
 		File result;
 
 		result = file;
 
 		if ((file != null) && file.exists()) {
-			File canon, canonParent;
+			File canon = null, canonParent;
 			if (file.getParent() == null) {
 				canon = file;
 			} else {
@@ -125,7 +171,7 @@ public class FileUtils {
 					canonParent = file.getParentFile().getCanonicalFile();
 					canon = new File(canonParent, file.getName());
 				} catch (IOException e) {
-					canon = null;
+					Log.v(FileUtils.class.getName(), "No canonical file");
 				}
 			}
 
@@ -148,14 +194,14 @@ public class FileUtils {
 	 * @return the file extension (folders return an empty extension, whatever
 	 *         the name)
 	 */
-	public static String getFileExtension(File file) {
+	public static String getFileExtension(final File file) {
 		String ext, name;
 		int index;
 
 		ext = "";
 		if (!file.isDirectory()) {
 			name = file.getName();
-			index = name.lastIndexOf(".");
+			index = name.lastIndexOf('.');
 			if (index != -1) {
 				ext = name.substring(index + 1).toLowerCase();
 			}
@@ -167,16 +213,37 @@ public class FileUtils {
 	 * 
 	 * @param file
 	 *            the file
+	 * @return the file extension (folders return an empty extension, whatever
+	 *         the name)
+	 */
+	public static String getFileExtension(final String filename) {
+		String ext;
+		int index;
+
+		ext = "";
+		if (filename != null) {
+			index = filename.lastIndexOf('.');
+			if (index != -1) {
+				ext = filename.substring(index + 1).toLowerCase();
+			}
+		}
+		return ext;
+	}
+
+	/**
+	 * 
+	 * @param file
+	 *            the file
 	 * @return the file prefix or the name if the file is a directory
 	 */
-	public static String getFilePrefix(File file) {
+	public static String getFilePrefix(final File file) {
 		String prefix, name;
 		int index;
 
 		prefix = file.getName();
 		name = file.getName();
 		if (!file.isDirectory()) {
-			index = name.lastIndexOf(".");
+			index = name.lastIndexOf('.');
 			if (index != -1) {
 				prefix = name.substring(0, index);
 			}
@@ -189,17 +256,19 @@ public class FileUtils {
 	 *            the file name
 	 * @return the Mime Type
 	 */
-	public static String getMimeType(File file) {
+	public static String getMimeType(final File file) {
+
+		final Locale locale = Locale.getDefault();
 
 		String type;
 		String ext;
 
 		ext = getFileExtension(file);
 		type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-				ext.toLowerCase());
+				ext.toLowerCase(locale));
 		if (type == null) {
 			type = MimeTypeMapEnhanced.getMimeTypeFromExtension(ext
-					.toLowerCase());
+					.toLowerCase(locale));
 		}
 
 		if (type == null) {
@@ -215,13 +284,13 @@ public class FileUtils {
 	 * @return the canonical path of the file if possible, or the uncanonized
 	 *         path
 	 */
-	public static String getCanonizePath(File f) {
+	public static String getCanonizePath(final File file) {
 		String path;
 		try {
-			path = f.getCanonicalPath();
+			path = file.getCanonicalPath();
 		} catch (IOException e) {
-			path = f.getPath();
-			Log.w("AndroidLib",
+			path = file.getPath();
+			Log.w(FileUtils.class.getName(),
 					"Error while canonizing file path, using raw path instead : \""
 							+ path + "\"");
 		}
@@ -237,7 +306,7 @@ public class FileUtils {
 	 *            the name of the folder to create
 	 * @return if the folder was created
 	 */
-	public static boolean createFolder(File parent, String name) {
+	public static boolean createFolder(final File parent, final String name) {
 		File folder;
 		boolean created;
 
@@ -259,7 +328,7 @@ public class FileUtils {
 	 *            the name of the file to create
 	 * @return if the file was created
 	 */
-	public static boolean createFile(File parent, String name) {
+	public static boolean createFile(final File parent, final String name) {
 		File file;
 		boolean created;
 
@@ -270,7 +339,7 @@ public class FileUtils {
 				file.createNewFile();
 				created = true;
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.w(FileUtils.class.getName(), e.getMessage());
 			}
 		}
 
@@ -284,10 +353,10 @@ public class FileUtils {
 	 *            the file/folder to delete
 	 * @return if the file/folder was deleted successfully
 	 */
-	public static boolean deleteItem(File file) {
+	public static boolean deleteItem(final File file) {
 		boolean result;
 
-		if (!file.exists()) {
+		if (!file.exists()) { // NOPMD by x.gouchet on 03/12/12 16:31
 			result = true;
 		} else if (!file.canWrite()) {
 			result = false;
@@ -305,19 +374,19 @@ public class FileUtils {
 	 *            the folder to delete
 	 * @return if the folder was deleted successfully
 	 */
-	public static boolean deleteRecursiveFolder(File folder) {
+	public static boolean deleteRecursiveFolder(final File folder) {
 		boolean result;
 
 		if (folder == null) {
 			result = false;
 		} else {
 
-			File[] files = folder.listFiles();
+			final File[] files = folder.listFiles();
 			// usually if the folder is a file or has no children
 			if (files == null) {
 				result = folder.delete();
 			} else {
-				boolean ok = true;
+				boolean allOk = true;
 				boolean fileOk;
 				for (File child : files) {
 					if (child.isDirectory()) {
@@ -329,9 +398,9 @@ public class FileUtils {
 					if (!fileOk) {
 						Log.w("", "Error deleting file " + child.getName());
 					}
-					ok = ok && fileOk;
+					allOk = allOk && fileOk;
 				}
-				if (ok) {
+				if (allOk) {
 					result = folder.delete();
 				} else {
 					result = false;
@@ -349,7 +418,7 @@ public class FileUtils {
 	 *            the path of the file/folder to delete
 	 * @return if the file/folder was deleted successfully
 	 */
-	public static boolean deleteItem(String path) {
+	public static boolean deleteItem(final String path) {
 		File file;
 		boolean result;
 
@@ -374,7 +443,7 @@ public class FileUtils {
 	 *            the destination file
 	 * @return if the copy was successfull
 	 */
-	public static boolean copyFile(File src, File dst) {
+	public static boolean copyFile(final File src, final File dst) {
 
 		FileChannel inChannel = null;
 		FileChannel outChannel = null;
@@ -385,14 +454,15 @@ public class FileUtils {
 			inChannel = new FileInputStream(src).getChannel();
 			outChannel = new FileOutputStream(dst).getChannel();
 		} catch (FileNotFoundException e) {
-			Log.w("AndroidLib", "File not found or no R/W permission", e);
+			Log.w(FileUtils.class.getName(),
+					"File not found or no R/W permission", e);
 			complete = false;
 		}
 
 		try {
 			inChannel.transferTo(0, inChannel.size(), outChannel);
 		} catch (Exception e) {
-			Log.w("AndroidLib", "Error during copy", e);
+			Log.w(FileUtils.class.getName(), "Error during copy", e);
 			complete = false;
 		}
 
@@ -404,7 +474,7 @@ public class FileUtils {
 				outChannel.close();
 			}
 		} catch (IOException e) {
-			Log.w("AndroidLib", "Error when closing files", e);
+			Log.w(FileUtils.class.getName(), "Error when closing files", e);
 			complete = false;
 		}
 
@@ -419,10 +489,10 @@ public class FileUtils {
 	 *            the destination output
 	 * @return if the copy was successfull
 	 */
-	public static boolean copyFile(InputStream inputStream, File dst) {
+	public static boolean copyFile(final InputStream inputStream, final File dst) {
 
 		FileOutputStream outputStream = null;
-		byte[] buf = new byte[1024];
+		final byte[] buf = new byte[1024];
 		int len;
 
 		boolean complete = true;
@@ -430,16 +500,20 @@ public class FileUtils {
 		try {
 			outputStream = new FileOutputStream(dst);
 		} catch (FileNotFoundException e) {
-			Log.w("AndroidLib", "File not found or no R/W permission", e);
+			Log.w(FileUtils.class.getName(),
+					"File not found or no R/W permission", e);
 			complete = false;
 		}
 
 		try {
-			while ((len = inputStream.read(buf)) > 0) {
-				outputStream.write(buf, 0, len);
-			}
+			do {
+				len = inputStream.read(buf);
+				if (len > 0) {
+					outputStream.write(buf, 0, len);
+				}
+			} while (len > 0);
 		} catch (Exception e) {
-			Log.w("AndroidLib", "Error during copy", e);
+			Log.w(FileUtils.class.getName(), "Error during copy", e);
 			complete = false;
 		}
 
@@ -451,7 +525,7 @@ public class FileUtils {
 				outputStream.close();
 			}
 		} catch (IOException e) {
-			Log.w("AndroidLib", "Error when closing files", e);
+			Log.w(FileUtils.class.getName(), "Error when closing files", e);
 			complete = false;
 		}
 
@@ -467,7 +541,7 @@ public class FileUtils {
 	 *            the new name to the file
 	 * @return if the rename was succesfull
 	 */
-	public static boolean renameItem(File file, String newName) {
+	public static boolean renameItem(final File file, final String newName) {
 		File newFile;
 		boolean result;
 
@@ -490,7 +564,7 @@ public class FileUtils {
 	 *            the new path to the file/folder
 	 * @return if the rename was succesfull
 	 */
-	public static boolean renameItem(String oldPath, String newPath) {
+	public static boolean renameItem(final String oldPath, final String newPath) {
 		File file, newFile;
 		boolean result;
 
@@ -504,5 +578,41 @@ public class FileUtils {
 		}
 
 		return result;
+	}
+
+	public String getFileCheckSum(File file) {
+
+		MessageDigest md;
+		InputStream is;
+		byte[] buffer = new byte[1024];
+		int length;
+		String checksum;
+
+		try {
+			md = MessageDigest.getInstance("MD5");
+			is = new FileInputStream("file.txt");
+			is = new DigestInputStream(is, md);
+
+			do {
+				length = is.read(buffer, 0, 1024);
+			} while (length > 0);
+
+			checksum = new String(md.digest());
+			is.close();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			checksum = null;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			checksum = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			checksum = null;
+		}
+
+		return checksum;
+	}
+
+	private FileUtils() {
 	}
 }

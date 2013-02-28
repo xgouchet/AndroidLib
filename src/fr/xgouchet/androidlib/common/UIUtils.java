@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * 
  */
-public class UIUtils {
+public final class UIUtils {
 
 	/**
 	 * @param context
@@ -14,10 +14,12 @@ public class UIUtils {
 	 *            the dip value to convert
 	 * @return the px value corresponding to the given dip
 	 */
-	public static int getPxFromDp(Context context, int dp) {
-		float scale = context.getResources().getDisplayMetrics().density;
+	public static int getPxFromDp(final Context context, final int sizeDp) {
+		final float scale = context.getResources().getDisplayMetrics().density;
 
-		return ((int) ((dp * scale) + 0.5f));
+		return ((int) ((sizeDp * scale) + 0.5f));
+	}
 
+	private UIUtils() {
 	}
 }

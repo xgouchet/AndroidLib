@@ -23,12 +23,14 @@ public final class MiscUtils {
 	 *            the title of the mail to compose
 	 */
 	public static void sendEmail(final Context ctx, final CharSequence object) {
-		Intent email;
-		email = new Intent(Intent.ACTION_SEND);
-		email.setType("text/plain");
-		email.putExtra(Intent.EXTRA_EMAIL, new String[] { ctx.getResources()
-				.getString(R.string.ui_mail) });
-		email.putExtra(Intent.EXTRA_SUBJECT, object);
+
+		String uriText = "mailto:"
+				+ ctx.getResources().getString(R.string.ui_mail) + "?subject="
+				+ Uri.encode(object.toString());
+
+		Intent email = new Intent(Intent.ACTION_SENDTO);
+		email.setData(Uri.parse(uriText));
+
 		ctx.startActivity(Intent.createChooser(email,
 				ctx.getString(R.string.ui_choose_mail)));
 	}
